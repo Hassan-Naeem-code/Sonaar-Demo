@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pydantic
+# qdrant-client
+# redis
+# neo4j

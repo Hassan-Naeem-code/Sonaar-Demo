@@ -1,0 +1,38 @@
+# Node
+frontend/node_modules/
+frontend/build/
+frontend/.env
+
+# Python
+backend/__pycache__/
+backend/.env
+backend/.pytest_cache/
+backend/.mypy_cache/
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# VS Code
+.vscode/
+
+# General
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+.DS_Store
+.env
+.env.*
+
+# Neo4j
+neo4j/data/
+neo4j/logs/
+
+# Qdrant
+qdrant/storage/
+
+# Misc
+*.swp
+*.swo
