@@ -1,6 +1,8 @@
 fastapi
 uvicorn
 pydantic
-# qdrant-client
-# redis
-# neo4j
+qdrant-client
+redis
+neo4j
+textblob
+numpy
