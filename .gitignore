@@ -9,30 +9,69 @@ backend/.env
 backend/.pytest_cache/
 backend/.mypy_cache/
 
-# Docker
+# Node.js
+node_modules/
+build/
+dist/
+.env
+.env.*
 *.log
-docker-compose.override.yml
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# VS Code
-.vscode/
-
-# General
+# Python
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.sqlite3
 *.db
-.DS_Store
+*.sqlite3
+venv/
 .env
 .env.*
 
-# Neo4j
-neo4j/data/
-neo4j/logs/
+# Docker
+*.pid
+docker-compose.override.yml
 
-# Qdrant
-qdrant/storage/
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Frontend
+/frontend/node_modules/
+/student-frontend/node_modules/
+/school-frontend/node_modules/
+/frontend/build/
+/student-frontend/build/
+/school-frontend/build/
+
+# Backend
+/backend/__pycache__/
+/backend/venv/
+/backend/.env
 
 # Misc
 *.swp
 *.swo
+.idea/
+*.bak
+
+# Neo4j
+/neo4j/data/
+/neo4j/logs/
+
+# Qdrant
+/qdrant/storage/
+
+# Redis
+/redis/data/
+
+# Ignore lock files if desired
+# package-lock.json
+yarn.lock
+Pipfile.lock

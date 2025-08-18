@@ -49,14 +49,49 @@ class ChatRequest(BaseModel):
 
 @app.post("/api/chat")
 async def chat_endpoint(req: ChatRequest):
-    # --- Real Intelligence Layer: Sentiment Analysis (demo) ---
-    from textblob import TextBlob
-    sentiment = TextBlob(req.message).sentiment.polarity
-    score = round(sentiment, 2)
+    # --- Intelligence Layer: Semantic Search + LLM Response ---
+    from sentence_transformers import SentenceTransformer, util
+    import openai
+    import numpy as np
+    import uuid
+
+    # Example FAQ knowledge base
+    faq = [
+        {"question": "What is depression?", "answer": "Depression is a mental health disorder characterized by persistent sadness and loss of interest."},
+        {"question": "How can I manage anxiety?", "answer": "Managing anxiety can include therapy, mindfulness, exercise, and medication if needed."},
+        {"question": "What are symptoms of stress?", "answer": "Symptoms of stress include irritability, fatigue, headaches, and difficulty sleeping."},
+        {"question": "How do I find mental health support?", "answer": "You can find support through therapists, helplines, online resources, and support groups."}
+    ]
+
+    # Embed user query and FAQ questions
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    query_embedding = model.encode(req.message, convert_to_tensor=True)
+    faq_embeddings = model.encode([item["question"] for item in faq], convert_to_tensor=True)
+    scores = util.pytorch_cos_sim(query_embedding, faq_embeddings)[0].cpu().numpy()
+    best_idx = int(np.argmax(scores))
+    best_score = float(scores[best_idx])
+
+    # If similarity is high, use FAQ answer; else, use OpenAI LLM
+    if best_score > 0.7:
+        bot_reply = faq[best_idx]["answer"]
+    else:
+        # OpenAI LLM fallback (requires OPENAI_API_KEY env variable)
+        openai.api_key = os.getenv("OPENAI_API_KEY", "")
+        if openai.api_key:
+            completion = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "system", "content": "You are a helpful mental health assistant."},
+                          {"role": "user", "content": req.message}]
+            )
+            bot_reply = completion.choices[0].message.content
+        else:
+            bot_reply = "I'm here to help. Can you tell me more about your concern?"
+
     important_data = {
         "user_id": req.user_id or "demo_user",
         "message": req.message,
-        "score": score
+        "score": best_score,
+        "reply": bot_reply
     }
 
     # --- Qdrant: Store vectorized message ---
